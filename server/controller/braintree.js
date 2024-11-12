@@ -1,3 +1,5 @@
+// 
+
 var braintree = require("braintree");
 require("dotenv").config();
 
@@ -20,9 +22,16 @@ class brainTree {
 
   paymentProcess(req, res) {
     let { amountTotal, paymentMethod } = req.body;
+    
+    // Giả sử tỷ giá hiện tại là 24,000 VND = 1 USD (hãy thay đổi nếu cần)
+    const exchangeRate = 24000;
+
+    // Chuyển đổi amountTotal từ VND sang USD
+    let amountInUSD = (amountTotal / exchangeRate).toFixed(2);
+
     gateway.transaction.sale(
       {
-        amount: amountTotal,
+        amount: amountInUSD,  // Sử dụng giá trị USD đã chuyển đổi
         paymentMethodNonce: paymentMethod,
         options: {
           submitForSettlement: true,
@@ -39,6 +48,7 @@ class brainTree {
           return res.json(result);
         } else {
           console.error(result.message);
+          return res.json(result);
         }
       }
     );

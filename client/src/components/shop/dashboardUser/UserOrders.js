@@ -71,7 +71,8 @@ const TableBody = ({ order }) => {
           )}
         </td>
         <td className="hover:bg-gray-200 p-2 text-center">
-          ${order.amount}.00
+          {/* ${order.amount}.00 */}
+          {new Intl.NumberFormat('vi-VN').format(order.amount)}đ
         </td>
         <td className="hover:bg-gray-200 p-2 text-center">{order.phone}</td>
         <td className="hover:bg-gray-200 p-2 text-center">{order.address}</td>
