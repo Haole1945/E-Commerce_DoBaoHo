@@ -8,6 +8,7 @@ const AdminNavber = (props) => {
     localStorage.removeItem("jwt");
     localStorage.removeItem("cart");
     localStorage.removeItem("wishList");
+    localStorage.removeItem('userId');
     window.location.href = "/";
   };
 

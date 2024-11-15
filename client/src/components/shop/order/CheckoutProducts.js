@@ -10,6 +10,11 @@ import { fetchData, fetchbrainTree, pay } from "./Action";
 import DropIn from "braintree-web-drop-in-react";
 
 const apiURL = process.env.REACT_APP_API_URL;
+// Get UserId
+// const token = localStorage.getItem("jwt");
+// const tokenParts = token.split('.');
+// const decodedPayload = JSON.parse(atob(tokenParts[1]));
+// const userId = decodedPayload._id;
 
 export const CheckoutComponent = (props) => {
   const history = useHistory();
@@ -123,7 +128,7 @@ export const CheckoutComponent = (props) => {
                     onInstance={(instance) => (state.instance = instance)}
                   />
                   <div
-                    onClick={(e) =>
+                    onClick={(e) =>{
                       pay(
                         data,
                         dispatch,
@@ -133,7 +138,7 @@ export const CheckoutComponent = (props) => {
                         totalCost,
                         history
                       )
-                    }
+                    }}
                     className="w-full px-4 py-2 text-center text-white font-semibold cursor-pointer"
                     style={{ background: "#303031" }}
                   >
@@ -181,7 +186,10 @@ const CheckoutProducts = ({ products }) => {
               >
                 <div className="md:flex md:items-center md:space-x-4">
                   <img
-                    onClick={(e) => history.push(`/products/${product._id}`)}
+                    onClick={(e) => {
+                      history.push(`/products/${product._id}`)
+                      // logPurchaseProduct(userId, product._id)
+                    }}
                     className="cursor-pointer md:h-20 md:w-20 object-cover object-center"
                     src={`${apiURL}/uploads/products/${product.pImages[0]}`}
                     alt="wishListproduct"
@@ -212,5 +220,24 @@ const CheckoutProducts = ({ products }) => {
     </Fragment>
   );
 };
+
+// const logPurchaseProduct = async (userId, productId) => {
+//   try {
+//     await fetch(`${apiURL}/api/interactions/add`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         user_id: userId,
+//         product_id: productId,
+//         action: 'purchase',
+//       }),
+//     });
+//     console.log('Product purchase logged successfully');
+//   } catch (error) {
+//     console.error('Error logging product purchase:', error);
+//   }
+// };
 
 export default CheckoutProducts;

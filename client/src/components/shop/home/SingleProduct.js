@@ -64,7 +64,19 @@ const SingleProduct = (props) => {
             <Fragment key={index}>
               <div className="relative col-span-1 m-2">
                 <img
-                  onClick={(e) => history.push(`/products/${item._id}`)}
+                  onClick={(e) => {
+
+                    // Get UserId
+                    const token = localStorage.getItem("jwt");
+                    if (token){
+                      const tokenParts = token.split('.');
+                      const decodedPayload = JSON.parse(atob(tokenParts[1]));
+                      const userId = decodedPayload._id;
+                      logViewProduct(userId, item._id)
+                    }
+
+                    history.push(`/products/${item._id}`)
+                  }}
                   className="w-full object-cover object-center cursor-pointer"
                   src={`${apiURL}/uploads/products/${item.pImages[0]}`}
                   alt=""
@@ -100,7 +112,19 @@ const SingleProduct = (props) => {
                 {/* WhisList Logic  */}
                 <div className="absolute top-0 right-0 mx-2 my-2 md:mx-4">
                   <svg
-                    onClick={(e) => isWishReq(e, item._id, setWlist)}
+                    onClick={(e) => {
+                      isWishReq(e, item._id, setWlist)
+
+                      // Get UserId
+                      const token = localStorage.getItem("jwt");
+                      if (token){
+                        const tokenParts = token.split('.');
+                        const decodedPayload = JSON.parse(atob(tokenParts[1]));
+                        const userId = decodedPayload._id;
+                        logWishListProduct(userId, item._id)
+                      }
+                      
+                    }}
                     className={`${
                       isWish(item._id, wList) && "hidden"
                     } w-5 h-5 md:w-6 md:h-6 cursor-pointer text-yellow-700 transition-all duration-300 ease-in`}
@@ -144,6 +168,44 @@ const SingleProduct = (props) => {
       )}
     </Fragment>
   );
+};
+
+const logViewProduct = async (userId, productId) => {
+  try {
+    await fetch(`${apiURL}/api/interactions/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        product_id: productId,
+        action: 'view',
+      }),
+    });
+    console.log('Product view logged successfully');
+  } catch (error) {
+    console.error('Error logging product view:', error);
+  }
+};
+
+const logWishListProduct = async (userId, productId) => {
+  try {
+    await fetch(`${apiURL}/api/interactions/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        product_id: productId,
+        action: 'wish_list',
+      }),
+    });
+    console.log('Product wishList logged successfully');
+  } catch (error) {
+    console.error('Error logging product wishList:', error);
+  }
 };
 
 export default SingleProduct;

@@ -8,6 +8,9 @@ import { subTotal, quantity, totalCost } from "./Mixins";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
+
+
+
 const CartModal = () => {
   const history = useHistory();
 
@@ -174,6 +177,16 @@ const CartModal = () => {
                     onClick={(e) => {
                       history.push("/checkout");
                       cartModalOpen();
+
+                      // Get UserId
+                      const token = localStorage.getItem("jwt");
+                      if (token) {
+                        const tokenParts = token.split('.');
+                        const decodedPayload = JSON.parse(atob(tokenParts[1]));
+                        const userId = decodedPayload._id;
+                        products.forEach((product) => logPurchaseProduct(userId, product._id));
+                      }
+                      
                     }}
                   >
                     {/* Checkout ${data.cartTotalCost}.00 */}
@@ -211,6 +224,25 @@ const CartModal = () => {
       {/* Cart Modal End */}
     </Fragment>
   );
+};
+
+const logPurchaseProduct = async (userId, productId) => {
+  try {
+    await fetch(`${apiURL}/api/interactions/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        product_id: productId,
+        action: 'purchase',
+      }),
+    });
+    console.log('Product purchase logged successfully');
+  } catch (error) {
+    console.error('Error logging product purchase:', error);
+  }
 };
 
 export default CartModal;

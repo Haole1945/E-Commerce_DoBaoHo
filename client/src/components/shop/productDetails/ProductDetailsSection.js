@@ -182,7 +182,19 @@ const ProductDetailsSection = (props) => {
                 </span>
                 <span>
                   <svg
-                    onClick={(e) => isWishReq(e, sProduct._id, setWlist)}
+                    onClick={(e) => {
+                      isWishReq(e, sProduct._id, setWlist)
+
+                      // Get UserId
+                      const token = localStorage.getItem("jwt");
+                      if (token) {
+                        const tokenParts = token.split('.');
+                        const decodedPayload = JSON.parse(atob(tokenParts[1]));
+                        const userId = decodedPayload._id;
+
+                        logWishListProduct(userId, sProduct._id)
+                      }
+                    }}
                     className={`${
                       isWish(sProduct._id, wList) && "hidden"
                     } w-5 h-5 md:w-6 md:h-6 cursor-pointer text-yellow-700`}
@@ -376,7 +388,7 @@ const ProductDetailsSection = (props) => {
                     </div>
                   ) : (
                     <div
-                      onClick={(e) =>
+                      onClick={(e) =>{
                         addToCart(
                           sProduct._id,
                           quantitiy,
@@ -387,7 +399,18 @@ const ProductDetailsSection = (props) => {
                           fetchData,
                           totalCost
                         )
-                      }
+
+                        // Get UserId
+                        const token = localStorage.getItem("jwt");
+                        if (token){
+                          const tokenParts = token.split('.');
+                          const decodedPayload = JSON.parse(atob(tokenParts[1]));
+                          const userId = decodedPayload._id;
+
+                          logAddToCartProduct(userId, sProduct._id);
+                        }
+                        
+                      }}
                       style={{ background: "#303031" }}
                       className={`px-4 py-2 text-white text-center cursor-pointer uppercase`}
                     >
@@ -425,6 +448,44 @@ const ProductDetailsSection = (props) => {
       <ProductDetailsSectionTwo />
     </Fragment>
   );
+};
+
+const logAddToCartProduct = async (userId, productId) => {
+  try {
+    await fetch(`${apiURL}/api/interactions/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        product_id: productId,
+        action: 'add_to_cart',
+      }),
+    });
+    console.log('Product addToCart logged successfully');
+  } catch (error) {
+    console.error('Error logging product addToCart:', error);
+  }
+};
+
+const logWishListProduct = async (userId, productId) => {
+  try {
+    await fetch(`${apiURL}/api/interactions/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        product_id: productId,
+        action: 'wish_list',
+      }),
+    });
+    console.log('Product wishList logged successfully');
+  } catch (error) {
+    console.error('Error logging product wishList:', error);
+  }
 };
 
 export default ProductDetailsSection;
