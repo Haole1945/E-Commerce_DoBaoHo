@@ -12,8 +12,11 @@ import {
 } from "./shop";
 import { DashboardAdmin, Categories, Products, Orders } from "./admin";
 import { UserProfile, UserOrders, SettingUser } from "./shop/dashboardUser";
-
+import ContactUs from "./shop/contact-us";
+import Blog from "./shop/blog";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Post from "./shop/Post";
+import FooterInformation from "./shop/aboutus";
 
 /* Routing All page will be here */
 const Routes = (props) => {
@@ -22,11 +25,16 @@ const Routes = (props) => {
       <Switch>
         {/* Shop & Public Routes */}
         <Route exact path="/" component={Home} />
+        <Route exact path="/contact-us" component={ContactUs} />
+        <Route exact path="/blog" component={Blog} />
         <Route exact path="/wish-list" component={WishList} />
         <Route exact path="/products/:id" component={ProductDetails} />
+        <Route path="/blog/:id" component={Post} />
+        <Route path="/:id" component={FooterInformation} />
+
         <Route
           exact
-          path="/products/category/:catId"
+          path="/products/category/:catId"  
           component={ProductByCategory}
         />
         <CartProtectedRoute

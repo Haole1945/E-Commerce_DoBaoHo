@@ -8,3 +8,13 @@
   flex-direction: column;
   transition: all 1s;
 }
+.link-style {
+  text-decoration: none;
+  
+}
+
+/* Khi di chuột vào, thêm gạch chân */
+.link-style:hover {
+  text-decoration: underline;
+  color: rgb(0, 255, 242); 
+}
