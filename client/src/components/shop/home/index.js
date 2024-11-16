@@ -4,6 +4,7 @@ import Slider from "./Slider";
 import ProductCategory from "./ProductCategory";
 import { homeState, homeReducer } from "./HomeContext";
 import SingleProduct from "./SingleProduct";
+import Recommendation from "./Recommendation";
 
 export const HomeContext = createContext();
 
@@ -15,7 +16,13 @@ const HomeComponent = () => {
       <section className="m-4 md:mx-8 md:my-6">
         <ProductCategory />
       </section>
+      <div style={{ fontSize: "24px", fontWeight: "bold", paddingLeft:'30px' } }>Recommendation Products</div>
+      <section className="m-4 md:mx-8 md:my-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <Recommendation />
+      </section>
+
       {/* Product Section */}
+      <div style={{ fontSize: "24px", fontWeight: "bold", paddingLeft:'30px' } }>Tất cả sản phẩm</div>
       <section className="m-4 md:mx-8 md:my-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <SingleProduct />
       </section>

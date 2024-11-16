@@ -4,7 +4,9 @@ const apiURL = process.env.REACT_APP_API_URL;
 export const getAllProduct = async () => {
   try {
     let res = await axios.get(`${apiURL}/api/product/all-product`);
+    console.log('ressss.dataa', res.data)
     return res.data;
+    
   } catch (error) {
     console.log(error);
   }

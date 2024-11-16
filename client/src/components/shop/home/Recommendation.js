@@ -1,12 +1,12 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { getAllProduct } from "../../admin/products/FetchApi";
+import { getRecommendProduct } from "./fetchApiRecom";
 import { HomeContext } from "./index";
 import { isWishReq, unWishReq, isWish } from "./Mixins";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
-const SingleProduct = (props) => {
+const Recommendation = (props) => {
   const { data, dispatch } = useContext(HomeContext);
   const { products } = data;
   const history = useHistory();
@@ -24,8 +24,8 @@ const SingleProduct = (props) => {
   const fetchData = async () => {
     dispatch({ type: "loading", payload: true });
     try {
-      let responseData = await getAllProduct();
-      console.log('responseData22222222222',responseData)
+      let responseData = await getRecommendProduct();
+      console.log('responseData',responseData)
       setTimeout(() => {
         if (responseData && responseData.Products) {
           dispatch({ type: "setProducts", payload: responseData.Products });
@@ -209,4 +209,4 @@ const logWishListProduct = async (userId, productId) => {
   }
 };
 
-export default SingleProduct;
+export default Recommendation;
