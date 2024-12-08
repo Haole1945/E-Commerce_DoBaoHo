@@ -5,7 +5,6 @@ const Interaction = require('../models/interactions');  // Import model Interact
 // API để lưu hành động
 router.post('/add', async (req, res) => {
     const { user_id, product_id, action, rating } = req.body;
-    console.log('test',user_id, product_id, action, rating)
 
     try {
         // Tạo một bản ghi mới

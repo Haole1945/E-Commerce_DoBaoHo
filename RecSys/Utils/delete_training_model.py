@@ -10,6 +10,9 @@ def delete_csv_files():
         # Tìm tất cả các file .csv trong thư mục
         csv_files = glob.glob(os.path.join(directory, '*.csv'))
         
+        if not csv_files:
+            print(f"Không có file .csv nào trong thư mục: {directory}")
+
         for file in csv_files:
             try:
                 os.remove(file)

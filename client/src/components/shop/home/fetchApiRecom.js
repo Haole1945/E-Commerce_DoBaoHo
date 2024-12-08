@@ -12,6 +12,7 @@ if (token){
 
 export const getRecommendProduct = async () => {
   try {
+    console.log('hello',`${apiURL}=${userId}`)
     let res = await axios.get(`${apiURL}=${userId}`);
     console.log('res.data', res.data)
     return res.data;

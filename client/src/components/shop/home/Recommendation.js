@@ -8,7 +8,7 @@ const apiURL = process.env.REACT_APP_API_URL;
 
 const Recommendation = (props) => {
   const { data, dispatch } = useContext(HomeContext);
-  const { products } = data;
+  const { productsRecom } = data;
   const history = useHistory();
 
   /* WhisList State */
@@ -24,11 +24,11 @@ const Recommendation = (props) => {
   const fetchData = async () => {
     dispatch({ type: "loading", payload: true });
     try {
-      let responseData = await getRecommendProduct();
-      console.log('responseData',responseData)
+      let responseDataRecom = await getRecommendProduct();
+      console.log('responseDataRecom',responseDataRecom)
       setTimeout(() => {
-        if (responseData && responseData.Products) {
-          dispatch({ type: "setProducts", payload: responseData.Products });
+        if (responseDataRecom) {
+          dispatch({ type: "setProductsRecom", payload: responseDataRecom });
           dispatch({ type: "loading", payload: false });
         }
       }, 500);
@@ -59,8 +59,8 @@ const Recommendation = (props) => {
   }
   return (
     <Fragment>
-      {products && products.length > 0 ? (
-        products.map((item, index) => {
+      {productsRecom && productsRecom.length > 0 ? (
+        productsRecom.map((item, index) => {
           return (
             <Fragment key={index}>
               <div className="relative col-span-1 m-2">
@@ -72,11 +72,11 @@ const Recommendation = (props) => {
                     if (token){
                       const tokenParts = token.split('.');
                       const decodedPayload = JSON.parse(atob(tokenParts[1]));
-                      const userId = decodedPayload._id;
-                      logViewProduct(userId, item._id)
+                      const userId = decodedPayload._id.$oid;
+                      logViewProduct(userId, item._id.$oid)
                     }
 
-                    history.push(`/products/${item._id}`)
+                    history.push(`/products/${item._id.$oid}`)
                   }}
                   className="w-full object-cover object-center cursor-pointer"
                   src={`${apiURL}/uploads/products/${item.pImages[0]}`}
@@ -114,20 +114,20 @@ const Recommendation = (props) => {
                 <div className="absolute top-0 right-0 mx-2 my-2 md:mx-4">
                   <svg
                     onClick={(e) => {
-                      isWishReq(e, item._id, setWlist)
+                      isWishReq(e, item._id.$oid, setWlist)
 
                       // Get UserId
                       const token = localStorage.getItem("jwt");
                       if (token){
                         const tokenParts = token.split('.');
                         const decodedPayload = JSON.parse(atob(tokenParts[1]));
-                        const userId = decodedPayload._id;
-                        logWishListProduct(userId, item._id)
+                        const userId = decodedPayload._id.$oid;
+                        logWishListProduct(userId, item._id.$oid)
                       }
                       
                     }}
                     className={`${
-                      isWish(item._id, wList) && "hidden"
+                      isWish(item._id.$oid, wList) && "hidden"
                     } w-5 h-5 md:w-6 md:h-6 cursor-pointer text-yellow-700 transition-all duration-300 ease-in`}
                     fill="none"
                     stroke="currentColor"
@@ -142,9 +142,9 @@ const Recommendation = (props) => {
                     />
                   </svg>
                   <svg
-                    onClick={(e) => unWishReq(e, item._id, setWlist)}
+                    onClick={(e) => unWishReq(e, item._id.$oid, setWlist)}
                     className={`${
-                      !isWish(item._id, wList) && "hidden"
+                      !isWish(item._id.$oid, wList) && "hidden"
                     } w-5 h-5 md:w-6 md:h-6 cursor-pointer text-yellow-700 transition-all duration-300 ease-in`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
